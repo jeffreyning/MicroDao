@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.jeffreyning</groupId>
+	<artifactId>demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+		<spring-framework-version>4.2.8.RELEASE</spring-framework-version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.github.jeffreyning</groupId>
+			<artifactId>nh-micro-template</artifactId>
+			<version>1.1.6-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jeffreyning</groupId>
+			<artifactId>nh-micro-orm</artifactId>
+			<version>0.0.2-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jeffreyning</groupId>
+			<artifactId>nh-micro-engine</artifactId>
+			<version>1.0.5-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.github.jeffreyning</groupId>
+			<artifactId>micro-dao</artifactId>
+			<version>1.0.1-RELEASE</version>
+		</dependency>		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring-framework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring-framework-version}</version>
+		</dependency>
+		<dependency>
+		  <groupId>com.github.jeffreyning</groupId>
+		  <artifactId>nh-micro-nhs</artifactId>
+		  <version>1.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+		  <groupId>log4j</groupId>
+		  <artifactId>log4j</artifactId>
+		  <version>1.2.17</version>		
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>0.2.19</version>		
+		</dependency>
+		<dependency>
+		  <groupId>com.github.jeffreyning</groupId>
+		  <artifactId>nh-micro-db</artifactId>
+		  <version>1.1.6-RELEASE</version>		
+		</dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+  			<version>5.1.40</version>            
+        </dependency>		
+
+	</dependencies>
+</project>

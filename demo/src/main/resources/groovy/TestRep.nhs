@@ -1,0 +1,36 @@
+/* 查询 */
+<%! <sql id="queryInfoByUserName"> %>
+select * from micro_test t left join micro_user u on  t.user_id=u.user_id where 1=1 
+<% if(paramArray[0]!=null){ %>		
+	and u.user_name like '%${paramArray[0]}%' 			
+<% 	} %>
+<%! </sql> %>
+
+<%! <sql id="queryInfoByUserAge"> %>
+select * from micro_test t left join micro_user u on  t.user_id=u.user_id where 1=1 
+<% if(paramArray[0].get("user_age")!=null){ %>		
+	and u.user_age >= #{paramArray[0].user_age} 			
+<% 	} %>
+<%! </sql> %>
+
+/* 插入 */
+<%! <sql id="insertInfoByNhs"> %>
+insert into micro_test(id,meta_key) values( 
+#{paramArray[0].id},#{paramArray[0].meta_key}
+	)
+<%! </sql> %>
+ 
+ 
+/* 更新 */ 
+<%! <sql id="updateInfoByNhs"> %>
+update micro_test set  
+			
+<% if(paramArray[0].metaKey!=null){%>
+,meta_key=#{paramArray[0].metaKey}	
+<% } %>	
+<% if(paramArray[0].metaName!=null){%>
+,meta_name=#{paramArray[0].metaName}	
+<% } %>	
+
+where id=#{paramArray[0].getId()}
+<%! </sql> %>
