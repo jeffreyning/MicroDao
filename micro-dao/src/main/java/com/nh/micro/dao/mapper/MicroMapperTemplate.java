@@ -2,6 +2,7 @@ package com.nh.micro.dao.mapper;
 
 
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -50,8 +51,7 @@ public class MicroMapperTemplate<T> extends MicroServiceTemplateSupport {
 	
 	public List getInfoListAllMapper4Class(Object example, String orderStr, Class inClass, Class outClass) throws Exception {
 
-		MicroTableName microTableName = example.getClass().getAnnotation(
-				MicroTableName.class);
+		MicroTableName microTableName = (MicroTableName) inClass.getAnnotation(MicroTableName.class);
 		if (microTableName == null) {
 			throw new RuntimeException("table name is null");
 		}
@@ -128,10 +128,17 @@ public class MicroMapperTemplate<T> extends MicroServiceTemplateSupport {
 		if(example!=null){
 			paramMap=MicroBeanMapUtil.beanToMap(example);
 		}
-
+		String tempKeyId=calcuIdKey();
+		boolean setIdFlag=false;
+		if(paramMap.get(tempKeyId)==null){
+			setIdFlag=true;
+		}
 
 		Integer status = createInfoService(paramMap, tableName,cusCol,cusValue);
-
+		if(setIdFlag==true && example!=null){
+			Object id=paramMap.get(tempKeyId);
+			MicroBeanMapUtil.setBeanProperty(example,tempKeyId,id.toString());
+		}
 		return status;		
 	}	
 	
