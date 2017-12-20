@@ -2,7 +2,7 @@
 dao java orm
 
 MicroDao为了解决mybatis固有缺陷，进行全新封装的dao框架，功能覆盖mybatis，且比mybatis更灵活。
-
+MicroDao同时支持mysql和oracle
 
 MicroDao相对mybatis的优点：
 1，sql脚本支持修改后热部署实时生效。
@@ -83,6 +83,7 @@ public class MicroTest {
 接口的方法名如updateInfoByNhs会映射为sql脚本中段落名称
 接口参数个数和类型均无限制
 
+
 关于结果映射：
 查询单条记录是，如果接口设置的返回值为实体bean则，则自动进行映射。
 接口返回值如果是list，可以用@ListInnerClass注解设置list中实体类，不设置则按照list<Map>返回
@@ -95,6 +96,9 @@ public class MicroTest {
 使用MicroCommonMapper通用插入方法时，通过实体bean带回自增id。
 使用sql时，通过IdHolder对象带出自增id。使用mapper模式时接口方法中传入IdHolder按照自增id处理。
 
+关于读写分离：
+通过在接口中设置@MicroDbName注解，决定底层切换哪个数据源进行操作。可以用此功能实现读写分离。
+
 ```
 package com.github.jeffreyning.test.dao;
 import java.util.List;
@@ -105,6 +109,7 @@ import com.nh.micro.dao.mapper.MicroCommonMapper;
 import com.nh.micro.orm.MicroDbName;
 import com.nh.micro.template.IdHolder;
 
+@MicroDbName(name="default")
 public interface TestRep extends MicroCommonMapper<MicroTest>  {
 	
 	public int updateInfoByNhs(MicroTest microTest);
@@ -172,7 +177,10 @@ where id=#{paramArray[0].getId()}
 配置BeanScannerConfigurer用来加载mapper接口，其中scanPath是接口根目录路径.
 MicroDao内部需要使用jdbctemplate。
 配置microDbHolder是MicroDao内部用来设置并在读写分离时切换多个数据源（jdbctemplate）的机制，至少配置一个default数据源。
+其中dbTypeMap属性用来配置数据源类型可填写mysql或oracle
 
+关于事务：
+仍使用spring事务机制TransactionManager进行管理
 
 ```
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
@@ -195,6 +203,17 @@ MicroDao内部需要使用jdbctemplate。
                     <ref bean="jdbcTemplate"></ref></entry>
             </map>
         </property>
+        <property name="dbTypeMap">
+            <map>
+                <entry>
+                    <key>
+                        <value>default</value>
+                    </key>
+                    <value>mysql</value>
+                </entry>
+
+            </map>
+        </property>  
     </bean> 
 
       
@@ -212,7 +231,33 @@ MicroDao内部需要使用jdbctemplate。
 	</bean>	
 	<bean class="com.nh.micro.dao.mapper.scan.BeanScannerConfigurer">
 		<property name="scanPath" value="com.github.jeffreyning.test.dao"></property>
-	</bean>          
+	</bean>  
+
+    <!-- 配置platform transaction manager-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 声明式事物管理，配置事物管理advice-->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <!-- method starts with 'get' are read-only-->
+            <tx:method name="get*" read-only="true"/>
+            <!-- method starts with 'insert/update' use required propagation -->
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <!-- other method use default transaction setting-->
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置事物管理advice作用范围与作用条件-->
+    <aop:config>
+        <aop:pointcut id="serviceLayerTransaction" expression="execution( * com.github.jeffreyning.test.dao.*..*(..))"/>
+        <aop:advisor pointcut-ref="serviceLayerTransaction" advice-ref="txAdvice"/>
+    </aop:config>	
+
 ```
 
 5，使用mapper出的dao实例操作数据库

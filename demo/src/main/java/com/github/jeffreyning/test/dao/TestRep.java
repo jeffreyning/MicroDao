@@ -9,7 +9,7 @@ import com.nh.micro.dao.mapper.MicroCommonMapper;
 import com.nh.micro.orm.MicroDbName;
 import com.nh.micro.template.IdHolder;
 
-@MicroDbName
+@MicroDbName(name="default")
 public interface TestRep extends MicroCommonMapper<MicroTest>  {
 	
 	public int updateInfoByNhs(MicroTest microTest);
