@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>com.github.jeffreyning</groupId>
 			<artifactId>nh-micro-orm</artifactId>
-			<version>0.0.2-RELEASE</version>
+			<version>0.0.3-RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.jeffreyning</groupId>
