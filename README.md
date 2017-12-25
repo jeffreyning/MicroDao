@@ -174,7 +174,7 @@ where id=#{paramArray[0].getId()}
 
 4，在spring中配置扫描sql脚本和接口
 配置NhsInitUtil用来加载sql脚本,其中rulePath是脚本根目录路径。
-配置BeanScannerConfigurer用来加载mapper接口，其中scanPath是接口根目录路径.
+配置BeanScannerConfigurer用来加载mapper接口，其中scanPath是接口根目录路径.路径为多个时用逗号分隔。
 MicroDao内部需要使用jdbctemplate。
 配置microDbHolder是MicroDao内部用来设置并在读写分离时切换多个数据源（jdbctemplate）的机制，至少配置一个default数据源。
 其中dbTypeMap属性用来配置数据源类型可填写mysql或oracle
@@ -350,7 +350,7 @@ public class TestMicroDao {
 
 
 
-*template模式技术说明*
+**template模式技术说明**
 通过继承MicroMapperTemplate<T>实现针对实体bean的增删改查操作和sql操作
 
 
@@ -365,5 +365,25 @@ public class demoDao extends MicroMapperTemplate<MicroTest> {
 		return getInfoByIdMapper(id);
 	}
 }
+```
+
+**非orm模式技术说明**
+
+通过继承MicroServiceTemplateSupport实现针对表的增删改查操作和sql操作。
+
+输入输出均为map，且map的value均为string类型，key对应列名称。
+日期类型string按照格式yyyy-MM-dd HH:mm:ss填写。
+
+```
+//插入
+public Integer createInfoService(Map requestParamMap,String tableName)
+//分页查询
+public Map getInfoList4PageService(Map requestParamMap,String tableName,Map pageMap)
+//不分页查询
+public List getInfoListAllService(Map requestParamMap,String tableName,Map sortMap)
+//更新
+public Integer updateInfoService(Map requestParamMap,String tableName)
+//删除
+public Integer delInfoService(Map requestParamMap,String tableName)
 ```
 
