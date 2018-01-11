@@ -329,7 +329,7 @@ public class MicroMapperTemplate<T> extends MicroServiceTemplateSupport {
 					return getSingleInfoServiceByOrm(sql, placeList, outClass);
 				}
 			}else{
-				String countSql="select count(1) from ( "+sql+" )";
+				String countSql="select count(1) from ( "+sql+" )  as micro_total_alias";
 				return getInfoList4PageServiceByOrm(countSql, placeList, sql, placeList, pageInfo, outClass);
 			}
 		}else if(type.equals("insert")){
