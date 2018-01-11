@@ -9,6 +9,11 @@ import org.springframework.beans.factory.FactoryBean;
 
 import com.nh.micro.rule.engine.core.GroovyExecUtil;
 
+/**
+ * 
+ * @author ninghao
+ *
+ */
 public class NDaoMapperFactory implements FactoryBean {
 	public Class mapperInterface=null;
 
@@ -19,16 +24,27 @@ public class NDaoMapperFactory implements FactoryBean {
 	public void setMapperInterface(Class mapperInterface) {
 		this.mapperInterface = mapperInterface;
 	}
+	
+	public String groovyName=null;
+	
+	public String getGroovyName() {
+		return groovyName;
+	}
 
+	public void setGroovyName(String groovyName) {
+		this.groovyName = groovyName;
+	}
 	@Override
 	public Object getObject() throws Exception {
 		NhsDaoProxy daoProxy=new NhsDaoProxy();
 		daoProxy.setMapperInterface(mapperInterface);
+		if(groovyName!=null && !"".equals(groovyName)){
+			daoProxy.setGroovyName(groovyName);
+		}		
 	    Object proxy = Proxy.newProxyInstance(mapperInterface.getClassLoader(), 
 	    	     new Class[]{mapperInterface}, 
 	    	     (InvocationHandler) daoProxy);	  
 
-	    
 		return proxy;
 	}
 

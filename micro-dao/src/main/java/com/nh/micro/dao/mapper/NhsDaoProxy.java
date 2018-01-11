@@ -15,9 +15,23 @@ import com.nh.micro.dao.mapper.MicroCommonMapper;
 import com.nh.micro.dao.mapper.MicroMapperUtil;
 import com.nh.micro.dao.mapper.UseMicroDao;
 import com.nh.micro.orm.MicroDbName;
-import com.nh.micro.rule.engine.core.GroovyExecUtil;
 
+
+/**
+ * 
+ * @author ninghao
+ *
+ */
 public class NhsDaoProxy implements InvocationHandler {
+	public String groovyName=null;
+	
+	public String getGroovyName() {
+		return groovyName;
+	}
+	public void setGroovyName(String groovyName) {
+		this.groovyName = groovyName;
+	}	
+	
 	private MicroMapperTemplate microMapperTemplate=null;
 	private Class mapperInterface=null;
 	public MicroMapperTemplate getMicroMapperTemplate() {
@@ -49,28 +63,14 @@ public class NhsDaoProxy implements InvocationHandler {
 		  
 		  UseMicroDao useMicro=method.getAnnotation(UseMicroDao.class);
 		  if(useMicro!=null){
-			 // String methodName=method.getName();
-			  
-/*			  MicroDbName dbNameAnno=(MicroDbName) mapperInterface.getAnnotation(MicroDbName.class);
-			  String dbName="default";
-			  if(dbNameAnno!=null){
-				  dbName=dbNameAnno.name();
-			  }
-			  if(this.microMapperTemplate==null){
-				  MicroMapperTemplate microMapperTemplate=new MicroMapperTemplate(dbName);
-				  Class entityClass=MicroMapperUtil.getEntityClass(MicroCommonMapper.class, mapperInterface);
-				  microMapperTemplate.setDefaultClass(entityClass);
-				  this.microMapperTemplate=microMapperTemplate;
-			  }*/
 
 			  return MicroMapperUtil.executeMethod(MicroCommonMapper.class, mapperInterface, method, this.microMapperTemplate, args);
-
 		  }
 
-		  //add end		
-
-		  List placeList=new ArrayList();
-		  String groovyName=mapperInterface.getSimpleName();
+		  String targetGroovyName=mapperInterface.getSimpleName();
+		  if(groovyName!=null && !"".equals(groovyName)){
+			  targetGroovyName=groovyName;
+		  }		  
 		  String methodName=method.getName();
 
 		 // String sql=(String) GroovyExecUtil.execGroovyRetObj(groovyName, methodName, args, placeList);	
@@ -84,7 +84,7 @@ public class NhsDaoProxy implements InvocationHandler {
 		  if(innerClassAnno!=null){
 			  outClass=innerClassAnno.name();
 		  }
-		  return microMapperTemplate.execServiceByGroovy(groovyName, methodName, outClass, listFlag, args);
+		  return microMapperTemplate.execServiceByGroovy(targetGroovyName, methodName, outClass, listFlag, args);
 
 	}
 
