@@ -29,7 +29,9 @@ public class Scanner extends ClassPathBeanDefinitionScanner {
 		  this.addIncludeFilter(new TypeFilter() {
 		        @Override
 		        public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory) throws IOException {
-		          return true;
+		        	//add 201806 ninghao
+			          boolean flag=metadataReader.getAnnotationMetadata().hasAnnotation("com.nh.micro.dao.mapper.InjectDao");
+			          return flag;
 		        }
 		      });
 		  
