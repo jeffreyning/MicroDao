@@ -38,6 +38,14 @@ public class NDaoMapperFactory implements FactoryBean {
 	public Object getObject() throws Exception {
 		NhsDaoProxy daoProxy=new NhsDaoProxy();
 		daoProxy.setMapperInterface(mapperInterface);
+		
+		if(groovyName==null || "".equals(groovyName)){
+			InjectDao anno=(InjectDao) mapperInterface.getAnnotation(InjectDao.class);
+			if(anno!=null){
+				String tempGroovyName=anno.name();
+				daoProxy.setGroovyName(tempGroovyName);
+			}
+		}		
 		if(groovyName!=null && !"".equals(groovyName)){
 			daoProxy.setGroovyName(groovyName);
 		}		
