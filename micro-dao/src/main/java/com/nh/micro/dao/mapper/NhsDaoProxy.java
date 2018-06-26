@@ -73,6 +73,12 @@ public class NhsDaoProxy implements InvocationHandler {
 		  }		  
 		  String methodName=method.getName();
 
+		  //add 201806 ninghao
+		  if(methodName.equals("toString")){
+			  String temp="NhsDaoProxy to "+ groovyName+"."+methodName;
+			  return temp;
+		  }
+		  
 		 // String sql=(String) GroovyExecUtil.execGroovyRetObj(groovyName, methodName, args, placeList);	
 		  Class oc=method.getReturnType();
 		  boolean listFlag=false;
@@ -80,10 +86,18 @@ public class NhsDaoProxy implements InvocationHandler {
 			  listFlag=true;
 		  }
 		  Class outClass=microMapperTemplate.getDefaultClass();
-		  ListInnerClass innerClassAnno=method.getAnnotation(ListInnerClass.class);
-		  if(innerClassAnno!=null){
-			  outClass=innerClassAnno.name();
-		  }
+		  
+		  if(listFlag==false){
+			  //add 201806 ninghao
+			  outClass=oc;
+			  
+		  }else{
+			  ListInnerClass innerClassAnno=method.getAnnotation(ListInnerClass.class);
+			  if(innerClassAnno!=null){
+				  outClass=innerClassAnno.name();
+			  }
+		  }		  
+		  
 		  return microMapperTemplate.execServiceByGroovy(targetGroovyName, methodName, outClass, listFlag, args);
 
 	}

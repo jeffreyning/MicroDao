@@ -44,6 +44,11 @@ public class MicroMapperTemplate<T> extends MicroServiceTemplateSupport {
 		super(dbName);
 	}
 
+	//add 201806 ninghao
+	public MicroMapperTemplate getMicroMapperTemplate(){
+		return this;
+	}
+	
 	public List getInfoListAllMapper(Object example, String orderStr) throws Exception {
 
 		return getInfoListAllMapper4Class(example, orderStr, defaultClass, defaultClass);

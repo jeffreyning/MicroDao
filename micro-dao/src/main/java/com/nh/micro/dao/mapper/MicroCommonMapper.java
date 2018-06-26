@@ -42,4 +42,7 @@ public Integer delInfoByIdMapper(String id)  throws Exception;
 @UseMicroDao
 public Integer delInfoByBizIdMapper(String bizId,String bizCol)  throws Exception;
 
+@UseMicroDao
+public MicroMapperTemplate getMicroMapperTemplate();
+
 }
