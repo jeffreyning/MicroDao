@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.jeffreyning</groupId>
 	<artifactId>micro-dao</artifactId>
-	<version>1.2.1-RELEASE</version>
+	<version>1.2.2-RELEASE</version>
 	<properties>
 		<spring-framework-version>4.2.8.RELEASE</spring-framework-version>
 		<project.release.version>1.0.1-RELEASE</project.release.version>

@@ -142,7 +142,10 @@ public class MicroMapperTemplate<T> extends MicroServiceTemplateSupport {
 		Integer status = createInfoService(paramMap, tableName,cusCol,cusValue);
 		if(setIdFlag==true && example!=null){
 			Object id=paramMap.get(tempKeyId);
-			MicroBeanMapUtil.setBeanProperty(example,tempKeyId,id.toString());
+			//add 201806 ning
+			Map mappingInfo = MicroBeanMapUtil.getKeyMap(inClass);
+			String fieldName=(String) mappingInfo.get(tempKeyId);
+			MicroBeanMapUtil.setBeanProperty(example,fieldName,id.toString());
 		}
 		return status;		
 	}	
