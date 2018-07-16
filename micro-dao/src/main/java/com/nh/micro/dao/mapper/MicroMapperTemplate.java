@@ -26,7 +26,7 @@ import com.nh.micro.template.MicroServiceTemplateSupport;
  * 
  */
 public class MicroMapperTemplate<T> extends MicroServiceTemplateSupport {
-
+	private static final String MICRO_DB_NULL="MICRO_DB_NULL";
 	public Class defaultClass;
 	public Class getDefaultClass() {
 		return defaultClass;
@@ -150,6 +150,42 @@ public class MicroMapperTemplate<T> extends MicroServiceTemplateSupport {
 		return status;		
 	}	
 	
+	//add 201807 ning
+	public List getNullFlagList(Object example){
+		Class cls=example.getClass();
+		Field[] fields=cls.getDeclaredFields();
+		if(fields==null){
+			return null;
+		}
+		
+
+		for (int i = 0; i < fields.length; i++) {
+			if(fields[i].getName().equals("microNullFlagList"))
+			{
+				try {
+					List retList=(List) fields[i].get(example);
+					return retList;
+				} catch (Exception e) {
+					return null;
+				}
+
+			}
+		}
+		return null;
+	}
+	
+	//add 201807 ning
+	public static void flagNull2Map(Map paramMap, List<String> flagList){
+		if(flagList==null){
+			return ;
+		}
+		for(String key:flagList){
+			if(paramMap.containsKey(key)){
+				paramMap.put(key, MICRO_DB_NULL);
+			}
+		}
+	}	
+	
 	public Integer updateInfoMapper(Object example) throws Exception{
 		return updateInfoMapper4Class(example, null, null, defaultClass);
 	}	
@@ -166,7 +202,10 @@ public class MicroMapperTemplate<T> extends MicroServiceTemplateSupport {
 		if(example!=null){
 			paramMap=MicroBeanMapUtil.beanToMap(example);
 		}
-
+		
+		//add 201807 ning
+		List flagList=getNullFlagList(example);
+		flagNull2Map(paramMap,flagList);
 
 		Integer status = updateInfoService(paramMap, tableName,cusCondition,cusSetStr);
 
